@@ -1,0 +1,56 @@
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+# SMTP Server Configuration
+SMTP_SERVER = 'smtp.gmail.com'
+SMTP_PORT = 587
+SMTP_USER = 'sugandha.rajpal@gmail.com'
+SMTP_PASSWORD = 'ylmczixytptendly'
+
+# Email Content
+subject = 'New Contact Form Submission'
+sender_email = 'sugandha.rajpal@gmail.com'
+receiver_email = 'receiver@example.com'
+
+# Create the email
+message = MIMEMultipart('alternative')
+message['From'] = sender_email
+message['To'] = receiver_email
+message['Subject'] = subject
+
+# Plain-text version
+text = """\
+Hi,
+You have a new message from your website contact form.
+"""
+
+# HTML version
+html = """\
+<html>
+  <body>
+    <h2>New Contact Message</h2>
+    <p><strong>Name:</strong> Sugandha Rajpal</p>
+    <p><strong>Email:</strong> sugandha.rajpal@gmail.com</p>
+    <p><strong>Message:</strong><br>Hey, I am interested in your services!</p>
+  </body>
+</html>
+"""
+
+# Attach both plain and HTML parts
+part1 = MIMEText(text, 'plain')
+part2 = MIMEText(html, 'html')
+message.attach(part1)
+message.attach(part2)
+
+# Connect and send email
+try:
+    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+    server.starttls()
+    server.login(SMTP_USER, SMTP_PASSWORD)
+    server.sendmail(sender_email, receiver_email, message.as_string())
+    print('HTML Email sent successfully!')
+except Exception as e:
+    print(f'Error sending email: {e}')
+finally:
+    server.quit()
